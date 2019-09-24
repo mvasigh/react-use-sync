@@ -32,7 +32,6 @@
     "parcel-bundler": "^1.12.3",
     "prettier": "^1.17.0",
     "pretty-quick": "^1.10.0",
-    "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "rollup": "^1.11.3",
     "rollup-plugin-babel": "^4.3.2",
@@ -42,6 +41,9 @@
     "ts-jest": "^24.1.0",
     "tslib": "^1.9.3",
     "typescript": "^3.5.1"
+  },
+  "peerDependencies": {
+    "react": "^16.9.0"
   },
   "husky": {
     "hooks": {
