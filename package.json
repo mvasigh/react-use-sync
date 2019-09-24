@@ -1,7 +1,7 @@
 {
-  "name": "ts-lib-boilerplate",
+  "name": "react-use-sync",
   "version": "0.0.1",
-  "description": "TypeScript library boilerplate",
+  "description": "React Hook for synchronized values between windows",
   "main": "index.js",
   "scripts": {
     "dev": "parcel test/app/index.html",
@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mvasigh/react-groove.git"
+    "url": "git+https://github.com/mvasigh/react-use-sync.git"
   },
   "author": "Mehdi Vasigh <mehdivasigh@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mvasigh/react-groove/issues"
+    "url": "https://github.com/mvasigh/react-use-sync/issues"
   },
-  "homepage": "https://github.com/mvasigh/react-groove#readme",
+  "homepage": "https://github.com/mvasigh/react-use-sync#readme",
   "devDependencies": {
     "@babel/core": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
