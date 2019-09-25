@@ -1,16 +1,31 @@
 import { uuid } from './util';
 
-interface Subscription {
+export interface Subscription {
   id: string;
+  namespace: string;
   listener: EventListener;
+  channel: SyncChannel;
+  publish: (Message) => void;
+}
+
+interface SubscriptionCollection {
+  [id: string]: Subscription;
+}
+
+interface Message {
+  originId: string;
+  content: any;
 }
 
 class SyncChannel {
   bc: BroadcastChannel = null;
-  subscriptions: Array<Subscription> = [];
+  namespace: string = null;
+  subscriptions: SubscriptionCollection = {};
 
-  constructor(bc) {
-    this.bc = bc;
+  constructor(namespace: string) {
+    this.bc = new BroadcastChannel(namespace);
+    this.namespace = namespace;
+    this.mount();
   }
 
   mount = () => {
@@ -19,22 +34,45 @@ class SyncChannel {
 
   unmount = () => {
     this.bc.removeEventListener('message', this.handleMessage);
+    this.bc.close();
   };
 
-  handleMessage: EventListener = (...args) => {
-    this.subscriptions.forEach(subscription => {
-      const [e] = args;
-      // if event didn't originate from subscription, fire listener
+  handleMessage = (e: MessageEvent) => {
+    Object.entries(this.subscriptions).forEach(([id, sub]) => {
+      if (e.data.originId === id) return;
+      sub.listener(e);
     });
   };
 
-  subscribe = (listener: EventListener): SyncChannel => {
+  subscribe = (listener: EventListener): Subscription => {
+    const id = uuid();
+    const namespace = this.namespace;
     const subscription = {
-      id: uuid(),
-      listener
+      id,
+      namespace,
+      listener,
+      channel: this,
+      publish: this.publish(id)
     };
-    this.subscriptions.push(subscription);
-    return this;
+    this.subscriptions[id] = subscription;
+    return subscription;
+  };
+
+  unsubscribe = (subscription: Subscription): void => {
+    const { id } = subscription;
+    if (this.subscriptions[id]) {
+      delete this.subscriptions[id];
+    }
+    if (!Object.keys(this.subscriptions).length) {
+      this.unmount();
+    }
+  };
+
+  publish = (id: string) => (message: Message) => {
+    return this.bc.postMessage({
+      originId: id,
+      content: message
+    });
   };
 }
 
