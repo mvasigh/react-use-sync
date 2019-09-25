@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "parcel test/app/index.html",
     "test": "jest",
-    "build": "rollup -c rollup.config.js"
+    "build": "rollup -c rollup.config.js",
+    "format:staged": "pretty-quick --staged"
   },
   "repository": {
     "type": "git",
@@ -47,7 +48,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged"
+      "pre-commit": "yarn format:staged && yarn test"
     }
   }
 }
