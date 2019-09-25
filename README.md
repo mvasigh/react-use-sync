@@ -1,7 +1,7 @@
 # react-use-sync
 
-![Version](https://img.shields.io/badge/version-0.0.1-blue.svg?cacheSeconds=2592000)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/mvasigh/react-groove/graphs/commit-activity)
+![Version](https://img.shields.io/badge/version-0.0.2-blue.svg?cacheSeconds=2592000)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/mvasigh/react-use-sync/graphs/commit-activity)
 [![Twitter: mehdi_vasigh](https://img.shields.io/twitter/follow/mehdi_vasigh.svg?style=social)](https://twitter.com/mehdi_vasigh)
 
 > React hook for synchronized values between windows
