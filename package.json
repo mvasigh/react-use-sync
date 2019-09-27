@@ -1,6 +1,6 @@
 {
   "name": "react-use-sync",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "React Hook for synchronized values between windows",
   "main": "build/index.js",
   "scripts": {
