@@ -14,8 +14,11 @@ interface SubscriptionCollection {
 
 interface Message {
   originId: string;
+  // eslint-disable-next-line
   content: any;
 }
+
+type Publisher = (Message) => void;
 
 class SyncChannel {
   bc: BroadcastChannel = null;
@@ -28,16 +31,16 @@ class SyncChannel {
     this.mount();
   }
 
-  mount = () => {
+  mount = (): void => {
     this.bc.addEventListener('message', this.handleMessage);
   };
 
-  unmount = () => {
+  unmount = (): void => {
     this.bc.removeEventListener('message', this.handleMessage);
     this.bc.close();
   };
 
-  handleMessage = (e: MessageEvent) => {
+  handleMessage = (e: MessageEvent): void => {
     Object.entries(this.subscriptions).forEach(([id, sub]) => {
       if (e.data.originId === id) return;
       sub.listener(e);
@@ -68,7 +71,7 @@ class SyncChannel {
     }
   };
 
-  publish = (id: string) => (message: Message) => {
+  publish = (id: string): Publisher => (message: Message): void => {
     return this.bc.postMessage({
       originId: id,
       content: message

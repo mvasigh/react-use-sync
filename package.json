@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "parcel test/app/index.html",
     "test": "jest",
+    "lint": "./node_modules/.bin/eslint src/lib/*.tsx",
     "build": "rollup -c rollup.config.js",
     "format:staged": "pretty-quick --staged"
   },
@@ -26,7 +27,11 @@
     "@types/jest": "^24.0.18",
     "@types/react": "^16.8.19",
     "@types/react-dom": "^16.8.4",
+    "@typescript-eslint/eslint-plugin": "^2.3.1",
+    "@typescript-eslint/parser": "^2.3.1",
     "babel-jest": "^24.9.0",
+    "eslint": "^6.4.0",
+    "eslint-plugin-react": "^7.14.3",
     "husky": "^2.2.0",
     "jest": "^24.8.0",
     "jest-dom": "^3.4.0",
@@ -48,7 +53,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn format:staged && yarn test"
+      "pre-commit": "yarn lint && yarn format:staged && yarn test"
     }
   }
 }

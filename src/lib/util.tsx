@@ -1,17 +1,16 @@
-export const debounce = (func: (any) => any, delay: number = 100): ((any) => any) => {
+// eslint-disable
+export const debounce = (func, delay = 100) => {
   let timer;
-  return function() {
-    const context = this;
-    const args = arguments;
+  return function(...args) {
     clearTimeout(timer);
-    timer = setTimeout(() => func.apply(context, args), delay);
+    timer = setTimeout(() => func.apply(this, args), delay);
   };
 };
 
 // https://stackoverflow.com/a/2117523/11599918
 export const uuid = (): string => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = (Math.random() * 16) | 0,
+    const r = (Math.random() * 16) | 0,
       v = c == 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
   });

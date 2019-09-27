@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import SyncChannel, { Subscription } from './SyncChannel';
 
 interface SubscriptionRef {
@@ -9,6 +9,7 @@ interface ChannelsCollection {
   [namespace: string]: SyncChannel;
 }
 
+// eslint-disable-next-line
 type UseStateSignature = [any, (any) => void];
 
 class ChannelStore {
@@ -28,7 +29,7 @@ class ChannelStore {
     return subscription;
   };
 
-  unsubscribe = (subscription: Subscription) => {
+  unsubscribe = (subscription: Subscription): void => {
     // const channel = this.channels[subscription.namespace];
     subscription.channel.unsubscribe(subscription);
     const channel = this.channels[subscription.namespace];
@@ -51,7 +52,7 @@ function useSubscription(namespace: string, onMessage: EventListener): Subscript
   useEffect(() => {
     const subscription = channelStore.subscribe(namespace, onMessage);
     subscriptionRef.current = subscription;
-    return () => channelStore.unsubscribe(subscription);
+    return (): void => channelStore.unsubscribe(subscription);
   }, []);
   return subscriptionRef.current;
 }
@@ -66,7 +67,7 @@ function useSync(signature: UseStateSignature, namespace: string): UseStateSigna
   const subscription = useSubscription(namespace, handleMessage);
 
   // broadcast messages each time state changes
-  const setter = val => {
+  const setter = (val): void => {
     if (subscription) {
       subscription.publish(val);
     }
