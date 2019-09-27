@@ -57,7 +57,7 @@ function useSubscription(namespace: string, onMessage: EventListener): Subscript
   return subscriptionRef.current;
 }
 
-function useSync(signature: UseStateSignature, namespace: string): UseStateSignature {
+function useSync(namespace: string, signature: UseStateSignature): UseStateSignature {
   const [val, setVal] = signature;
   const handleMessage = useCallback(e => {
     setVal(e.data.content);
