@@ -15,9 +15,11 @@ module.exports = {
     project: './tsconfig.json',
     extraFileExtensions: ['.tsx']
   },
-  plugins: ['@typescript-eslint', 'react'],
+  plugins: ['@typescript-eslint', 'react', 'react-hooks'],
   extends: ['plugin:@typescript-eslint/recommended'],
   rules: {
-    'no-unused-vars': 1
+    'no-unused-vars': 1,
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'error'
   }
 };
