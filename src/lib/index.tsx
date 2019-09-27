@@ -53,15 +53,18 @@ function useSubscription(namespace: string, onMessage: EventListener): Subscript
     const subscription = channelStore.subscribe(namespace, onMessage);
     subscriptionRef.current = subscription;
     return (): void => channelStore.unsubscribe(subscription);
-  }, []);
+  }, [namespace, onMessage]);
   return subscriptionRef.current;
 }
 
-function useSync(signature: UseStateSignature, namespace: string): UseStateSignature {
+function useSync(namespace: string, signature: UseStateSignature): UseStateSignature {
   const [val, setVal] = signature;
-  const handleMessage = useCallback(e => {
-    setVal(e.data.content);
-  }, []);
+  const handleMessage = useCallback(
+    e => {
+      setVal(e.data.content);
+    },
+    [setVal]
+  );
 
   // open the subscription
   const subscription = useSubscription(namespace, handleMessage);
