@@ -2,7 +2,7 @@
   "name": "react-use-sync",
   "version": "0.0.3",
   "description": "React Hook for synchronized values between windows",
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
     "dev": "parcel test/app/index.html",
     "test": "jest",
