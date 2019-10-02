@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { render } from 'react-dom';
-import useSync from '../../src/lib';
+import useSync from '../../build';
 
 function App() {
-  const [clicked, setClicked] = useSync(useState(0), 'clicked');
+  const [clicked, setClicked] = useSync('clicked', useState(0));
 
   return (
     <React.Fragment>

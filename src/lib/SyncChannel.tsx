@@ -14,7 +14,6 @@ interface SubscriptionCollection {
 
 interface Message {
   originId: string;
-  // eslint-disable-next-line
   content: any;
 }
 
