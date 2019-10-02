@@ -9,7 +9,6 @@ interface ChannelsCollection {
   [namespace: string]: SyncChannel;
 }
 
-// eslint-disable-next-line
 type UseStateSignature = [any, (any) => void];
 
 class ChannelStore {
@@ -30,7 +29,6 @@ class ChannelStore {
   };
 
   unsubscribe = (subscription: Subscription): void => {
-    // const channel = this.channels[subscription.namespace];
     subscription.channel.unsubscribe(subscription);
     const channel = this.channels[subscription.namespace];
     if (!channel || !Object.keys(channel.subscriptions).length) {

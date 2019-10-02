@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { render } from 'react-dom';
 import useSync from '../../build';
 
-console.log({ useSync });
-
 function App() {
   const [clicked, setClicked] = useSync('clicked', useState(0));
 
