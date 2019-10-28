@@ -14,7 +14,7 @@ interface SubscriptionCollection {
 
 interface Message {
   originId: string;
-  content: any;
+  <T>(content: T): T;
 }
 
 type Publisher = (Message) => void;
