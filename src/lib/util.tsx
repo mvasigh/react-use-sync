@@ -1,7 +1,7 @@
 // eslint-disable
-export const debounce = (func, delay = 100) => {
+export const debounce = (func: Function, delay = 100): Function => {
   let timer;
-  return function(...args) {
+  return function(...args): void {
     clearTimeout(timer);
     timer = setTimeout(() => func.apply(this, args), delay);
   };

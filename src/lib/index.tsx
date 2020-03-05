@@ -1,26 +1,16 @@
 import { useEffect, useRef, useCallback } from 'react';
-import SyncChannel, { Subscription } from './SyncChannel';
-
-interface SubscriptionRef {
-  current: Subscription;
-}
-
-interface ChannelsCollection {
-  [namespace: string]: SyncChannel;
-}
-
-type UseStateSignature = [any, (any) => void];
+import SyncChannel from './SyncChannel';
 
 class ChannelStore {
-  channels: ChannelsCollection = {};
+  channels: UseSyncChannelsCollection = {};
 
   formatNamespace = (namespace: string): string => {
     return `react-use-sync:${namespace}`;
   };
 
-  subscribe = (namespace: string, onMessage: EventListener): Subscription => {
+  subscribe = (namespace: string, onMessage: EventListener): UseSyncSubscription => {
     const formattedName = this.formatNamespace(namespace);
-    let syncChannel: SyncChannel = this.channels[formattedName] || null;
+    let syncChannel: UseSyncChannel = this.channels[formattedName] || null;
     if (!syncChannel) {
       syncChannel = this.createChannel(formattedName);
     }
@@ -28,7 +18,7 @@ class ChannelStore {
     return subscription;
   };
 
-  unsubscribe = (subscription: Subscription): void => {
+  unsubscribe = (subscription: UseSyncSubscription): void => {
     subscription.channel.unsubscribe(subscription);
     const channel = this.channels[subscription.namespace];
     if (!channel || !Object.keys(channel.subscriptions).length) {
@@ -36,7 +26,7 @@ class ChannelStore {
     }
   };
 
-  createChannel = (formattedName: string): SyncChannel => {
+  createChannel = (formattedName: string): UseSyncChannel => {
     const syncChannel = new SyncChannel(formattedName);
     this.channels[formattedName] = syncChannel;
     return this.channels[formattedName];
@@ -45,8 +35,8 @@ class ChannelStore {
 
 const channelStore: ChannelStore = new ChannelStore();
 
-function useSubscription(namespace: string, onMessage: EventListener): Subscription {
-  const subscriptionRef: SubscriptionRef = useRef();
+function useSubscription(namespace: string, onMessage: EventListener): UseSyncSubscription {
+  const subscriptionRef: UseSyncSubscriptionRef = useRef();
   useEffect(() => {
     const subscription = channelStore.subscribe(namespace, onMessage);
     subscriptionRef.current = subscription;
@@ -55,7 +45,7 @@ function useSubscription(namespace: string, onMessage: EventListener): Subscript
   return subscriptionRef.current;
 }
 
-function useSync(namespace: string, signature: UseStateSignature): UseStateSignature {
+function useSync<T>(namespace: string, signature: [T, (arg: T) => void]): [T, (arg: T) => void] {
   const [val, setVal] = signature;
   const handleMessage = useCallback(
     e => {
@@ -68,7 +58,7 @@ function useSync(namespace: string, signature: UseStateSignature): UseStateSigna
   const subscription = useSubscription(namespace, handleMessage);
 
   // broadcast messages each time state changes
-  const setter = (val): void => {
+  const setter = (val: T): void => {
     if (subscription) {
       subscription.publish(val);
     }
