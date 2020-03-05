@@ -1,28 +1,9 @@
 import { uuid } from './util';
 
-export interface Subscription {
-  id: string;
-  namespace: string;
-  listener: EventListener;
-  channel: SyncChannel;
-  publish: (Message) => void;
-}
-
-interface SubscriptionCollection {
-  [id: string]: Subscription;
-}
-
-interface Message {
-  originId: string;
-  <T>(content: T): T;
-}
-
-type Publisher = (Message) => void;
-
-class SyncChannel {
+class SyncChannel implements UseSyncChannel {
   bc: BroadcastChannel = null;
   namespace: string = null;
-  subscriptions: SubscriptionCollection = {};
+  subscriptions: UseSyncSubscriptionCollection = {};
 
   constructor(namespace: string) {
     this.bc = new BroadcastChannel(namespace);
@@ -46,21 +27,21 @@ class SyncChannel {
     });
   };
 
-  subscribe = (listener: EventListener): Subscription => {
+  subscribe = (listener: EventListener): UseSyncSubscription => {
     const id = uuid();
     const namespace = this.namespace;
-    const subscription = {
+    const subscription: UseSyncSubscription = {
       id,
       namespace,
       listener,
       channel: this,
-      publish: this.publish(id)
+      publish: this.createPublisher(id)
     };
     this.subscriptions[id] = subscription;
     return subscription;
   };
 
-  unsubscribe = (subscription: Subscription): void => {
+  unsubscribe = (subscription: UseSyncSubscription): void => {
     const { id } = subscription;
     if (this.subscriptions[id]) {
       delete this.subscriptions[id];
@@ -70,7 +51,7 @@ class SyncChannel {
     }
   };
 
-  publish = (id: string): Publisher => (message: Message): void => {
+  createPublisher = (id: string): UseSyncPublisher => <T>(message: T): void => {
     return this.bc.postMessage({
       originId: id,
       content: message
