@@ -1,5 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react';
 import SyncChannel from './SyncChannel';
+import { SUPPORTS_BROADCAST_CHANNEL } from './util';
 
 class ChannelStore {
   channels: UseSyncChannelsCollection = {};
@@ -37,11 +38,17 @@ const channelStore: ChannelStore = new ChannelStore();
 
 function useSubscription(namespace: string, onMessage: EventListener): UseSyncSubscription {
   const subscriptionRef: UseSyncSubscriptionRef = useRef();
+
   useEffect(() => {
+    if (!SUPPORTS_BROADCAST_CHANNEL) return;
+
     const subscription = channelStore.subscribe(namespace, onMessage);
     subscriptionRef.current = subscription;
     return (): void => channelStore.unsubscribe(subscription);
   }, [namespace, onMessage]);
+
+  if (!SUPPORTS_BROADCAST_CHANNEL) return null;
+
   return subscriptionRef.current;
 }
 
@@ -62,7 +69,7 @@ function useSync<T>(namespace: string, signature: [T, (arg: T) => void]): [T, (a
     if (subscription) {
       subscription.publish(val);
     }
-    setVal(val);
+    return setVal(val);
   };
 
   return [val, setter];

@@ -1,4 +1,5 @@
-// eslint-disable
+export const SUPPORTS_BROADCAST_CHANNEL = 'BroadcastChannel' in window;
+
 export const debounce = (func: Function, delay = 100): Function => {
   let timer;
   return function(...args): void {
